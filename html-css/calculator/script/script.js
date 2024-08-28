@@ -5,11 +5,13 @@ const calculator = document.querySelector('.calculator');
 let lastResult = '';
 let openedParentheses = 0;
 let closedParentheses = 0;
+let hasDecimal = false;
 
 buttons.forEach((item) => {
     item.addEventListener('click', () => {
         const operator = item.dataset.operator;
         if (operator) {
+            hasDecimal = false;
             if (operator === 'clear') {
                 display.textContent = '';
                 lastResult = '';
@@ -22,6 +24,11 @@ buttons.forEach((item) => {
                         result = parseFloat(result.toFixed(14)); 
                     }
                     display.textContent = result;
+
+                    if (display.textContent.includes('.')) {
+                        hasDecimal = true;
+                    }
+
                     lastResult = result;
                 } catch (error) {
                     display.textContent = 'Error';
@@ -48,6 +55,14 @@ buttons.forEach((item) => {
             }
         } else {
             if (display.textContent.length < 14) {
+
+                if (item.textContent === '.') {
+                    if (hasDecimal) {
+                        return;
+                    }
+                    hasDecimal = true;
+                }
+
                 display.textContent += item.textContent;
             }
         }
